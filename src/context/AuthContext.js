@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE as API_BASE_URL } from '../config/api';
 
 const AuthContext = createContext();
 const STORAGE_KEY = 'padel-user';
-const API_BASE = 'http://localhost:5000';
+const API_BASE = API_BASE_URL;
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

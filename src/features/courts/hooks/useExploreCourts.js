@@ -45,8 +45,8 @@ export default function useExploreCourts() {
 
   // ─── initial load ─────────
   useEffect(() => {
-    fetchCourts(filters);
-  }, []);
+    fetchCourts({ location: "", price: "", name: "" });
+  }, [fetchCourts]);
 
   // ─── input change ─────────
   const handleFilterChange = (e) => {

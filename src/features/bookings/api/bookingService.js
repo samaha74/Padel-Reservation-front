@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5000';
+import { API_BASE as API_BASE_URL } from '../../../config/api';
 
 const getAuthHeaders = () => {
   const userStr = localStorage.getItem("padel-user");

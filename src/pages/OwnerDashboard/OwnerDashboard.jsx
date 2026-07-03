@@ -4,8 +4,6 @@ import CourtCard from "../../features/courts/components/CourtCard";
 import CourtReviewsModal from "../../features/courts/components/CourtReviewsModal";
 import useCourts from "../../features/courts/hooks/useCourts";
 import { bookingService } from "../../features/bookings/api/bookingService";
-import { useAuth } from "../../context/AuthContext";
-
 function getBookingCourtId(booking) {
   if (!booking) return null;
   const { court } = booking;
@@ -52,7 +50,6 @@ function getOwnerReservationBadge(booking) {
 }
 
 export default function OwnerDashboard() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { courts, loading, error, deleteCourt } = useCourts();
   const [reservations, setReservations] = useState([]);

@@ -284,7 +284,7 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => { fetchCourts(filters); }, []);
+  useEffect(() => { fetchCourts({ location: "", name: "", price: "" }); }, [fetchCourts]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

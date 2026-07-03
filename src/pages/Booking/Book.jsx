@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {useParams } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 import { bookingService } from '../../features/bookings/api/bookingService';
 import { RenderTimeslots } from './BookingComponents/RenderTimeslots.jsx';
 import '../../styles/auth.css';
@@ -10,7 +9,6 @@ const TIMES = ['12:00 AM', '1:00 AM', '2:00 AM', '3:00 AM', '4:00 AM', '5:00 AM'
 
 const BookingPage = () => {
   const { courtId } = useParams();
-  const { user } = useAuth();
   const [selectedDate, setSelectedDate] = useState(() => {
     const date = new Date();
     date.setHours(0, 0, 0, 0);
@@ -23,28 +21,7 @@ const BookingPage = () => {
   const [error, setError] = useState('');
   const [courtName, setCourtName] = useState('');
 
-  // Map court IDs to names
-  useEffect(() => {
-    const loadInitialData = async () => {
-      if (courtId) {
-        try {
-          // Fetch the court details properly
-          const courtData = await bookingService.getCourtById(courtId);
-
-          setCourtName(courtData?.name || courtData?.court?.name || 'Unknown Court');
-          
-          await fetchBookings();
-        } catch (err) {
-          console.error("Failed to load court info:", err);
-          setCourtName("Error loading court");
-        }
-      }
-    };
-
-    loadInitialData();
-  }, [selectedDate, courtId]);
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       // Use local date components instead of toISOString() to avoid timezone shift
       const year = selectedDate.getFullYear();
@@ -68,7 +45,24 @@ const BookingPage = () => {
       console.error('Error fetching bookings:', error);
       setBookings([]);
     }
-  };
+  }, [courtId, selectedDate]);
+
+  useEffect(() => {
+    const loadInitialData = async () => {
+      if (courtId) {
+        try {
+          const courtData = await bookingService.getCourtById(courtId);
+          setCourtName(courtData?.name || courtData?.court?.name || 'Unknown Court');
+          await fetchBookings();
+        } catch (err) {
+          console.error('Failed to load court info:', err);
+          setCourtName('Error loading court');
+        }
+      }
+    };
+
+    loadInitialData();
+  }, [selectedDate, courtId, fetchBookings]);
 
   const getTimeIndex = (time) => TIMES.indexOf(time);
   const getSortedTimes = (times) => [...times].sort((a, b) => getTimeIndex(a) - getTimeIndex(b));

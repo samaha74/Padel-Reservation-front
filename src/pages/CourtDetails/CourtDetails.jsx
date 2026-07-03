@@ -340,24 +340,6 @@ export default function CourtDetails() {
     if (id) fetchCourt();
   }, [id, fetchCourt]);
 
-  const timeSlots = [
-    "08:00",
-    "09:00",
-    "10:00",
-    "11:00",
-    "12:00",
-    "13:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-    "21:00",
-    "22:00",
-  ];
-
   const getTimeIndex = (time) => {
     const m = time.match(/(\d+):(\d+)\s?(AM|PM)?/);
     if (!m) return -1;
@@ -372,7 +354,7 @@ export default function CourtDetails() {
 
   const getSortedTimes = (times) => [...times].sort((a, b) => getTimeIndex(a) - getTimeIndex(b));
 
-  const fetchBookings = async (date) => {
+  const fetchBookings = useCallback(async (date) => {
     try {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -385,11 +367,11 @@ export default function CourtDetails() {
     } catch (err) {
       setBookings([]);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     if (id && selectedDate) fetchBookings(selectedDate);
-  }, [id, selectedDate]);
+  }, [id, selectedDate, fetchBookings]);
 
   const isTimeBooked = (time) => {
     const [hours, minutes, period] = time.match(/(\d+):(\d+)\s(AM|PM)/).slice(1);
