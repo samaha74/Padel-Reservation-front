@@ -1,0 +1,463 @@
+/* ============================================================
+   PADEL CLUB — PROFESSIONAL NAVBAR
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap");
+
+/* ── Base ──────────────────────────────────────────────────── */
+.pnav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: #f97316;
+  transition:
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    padding 0.25s ease;
+  font-family: "DM Sans", sans-serif;
+}
+
+.pnav--scrolled {
+  background: rgba(249, 115, 22, 0.97);
+  box-shadow:
+    0 2px 24px rgba(249, 115, 22, 0.25),
+    0 1px 0 rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.pnav__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 24px;
+  height: 64px;
+}
+
+/* ── Logo ──────────────────────────────────────────────────── */
+.pnav__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+  font-family: "Syne", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pnav__logo strong {
+  font-weight: 800;
+}
+
+.pnav__logo-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.pnav__logo:hover {
+  opacity: 0.92;
+}
+
+/* ── Center Links ──────────────────────────────────────────── */
+.pnav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 32px;
+  flex: 1;
+}
+
+.pnav__link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  white-space: nowrap;
+}
+
+.pnav__link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.pnav__link--active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+/* ── Right side ────────────────────────────────────────────── */
+.pnav__right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.pnav__link--bookings {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.pnav__link--bookings:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* CTA button (logged-out) */
+.pnav__cta {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  color: #f97316;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 8px 20px;
+  border-radius: 999px;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+.pnav__cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: #ea580c;
+}
+
+/* ── Avatar / Dropdown ─────────────────────────────────────── */
+.pnav__avatar-wrap {
+  position: relative;
+  margin-left: 8px;
+}
+
+.pnav__avatar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  padding: 5px 12px 5px 5px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+  color: #fff;
+}
+
+.pnav__avatar:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.pnav__avatar-initials {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fff;
+  color: #f97316;
+  font-weight: 800;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: "Syne", sans-serif;
+}
+
+.pnav__caret {
+  transition: transform 0.2s ease;
+}
+
+.pnav__caret--open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu */
+.pnav__dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.14),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  animation: dropIn 0.18s ease;
+  z-index: 100;
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pnav__dropdown-header {
+  padding: 16px 16px 12px;
+  background: #fff7ed;
+}
+
+.pnav__dropdown-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #111827;
+  margin: 0 0 2px;
+  font-family: "Syne", sans-serif;
+}
+
+.pnav__dropdown-email {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin: 0 0 6px;
+}
+
+.pnav__dropdown-role {
+  display: inline-block;
+  background: #fed7aa;
+  color: #c2410c;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pnav__dropdown-divider {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 4px 0;
+}
+
+.pnav__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+  transition:
+    background 0.12s,
+    color 0.12s;
+  text-align: left;
+}
+
+.pnav__dropdown-item:hover {
+  background: #fff7ed;
+  color: #f97316;
+}
+
+.pnav__dropdown-item svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.pnav__dropdown-item--logout {
+  color: #dc2626;
+}
+
+.pnav__dropdown-item--logout:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* ── Mobile Hamburger ──────────────────────────────────────── */
+.pnav__burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: 12px;
+  transition: background 0.15s;
+}
+
+.pnav__burger span {
+  display: block;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition:
+    transform 0.25s,
+    opacity 0.25s;
+  transform-origin: center;
+}
+
+.pnav__burger--open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.pnav__burger--open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.pnav__burger--open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.pnav__burger:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Mobile Drawer ─────────────────────────────────────────── */
+.pnav__drawer {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-bottom: 1px solid #f3f4f6;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  padding: 12px 0 20px;
+  z-index: 999;
+  transform: translateY(-10px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.22s ease,
+    opacity 0.22s ease;
+  font-family: "DM Sans", sans-serif;
+}
+
+.pnav__drawer--open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.pnav__drawer-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  margin-bottom: 8px;
+}
+
+.pnav__drawer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f97316;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  flex-shrink: 0;
+  font-family: "Syne", sans-serif;
+}
+
+.pnav__drawer-link {
+  display: block;
+  padding: 11px 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #374151;
+  text-decoration: none;
+  transition:
+    background 0.12s,
+    color 0.12s;
+}
+
+.pnav__drawer-link:hover {
+  background: #fff7ed;
+  color: #f97316;
+}
+
+.pnav__drawer-logout {
+  margin: 12px 20px 0;
+  width: calc(100% - 40px);
+  padding: 11px;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s;
+  text-align: center;
+}
+
+.pnav__drawer-logout:hover {
+  background: #fee2e2;
+}
+
+.pnav__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 998;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .pnav__links,
+  .pnav__right {
+    display: none;
+  }
+
+  .pnav__burger {
+    display: flex;
+  }
+
+  .pnav__drawer {
+    display: flex;
+  }
+
+  .pnav__overlay {
+    display: block;
+  }
+}

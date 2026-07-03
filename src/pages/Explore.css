@@ -1,0 +1,229 @@
+
+/* ===============================
+   GLOBAL PAGE
+================================ */
+.explore-page {
+  min-height: 100vh;
+  background: #f7f7f7;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+}
+
+/* ===============================
+   HEADER
+================================ */
+.explore-header {
+  margin-bottom: 20px;
+}
+
+.explore-header h1 {
+  font-size: 30px;
+  margin: 0;
+  color: #222;
+}
+
+.explore-header p {
+  margin-top: 4px;
+  color: #777;
+  font-size: 14px;
+}
+
+/* ===============================
+   FILTER BAR
+================================ */
+.explore-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  align-items: center;
+}
+
+.explore-filter-input {
+  flex: 1;
+  min-width: 160px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+}
+
+.explore-filter-input:focus {
+  border-color: #ff7a00;
+  box-shadow: 0 0 0 3px rgba(255,122,0,0.15);
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.explore-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.primary {
+  background: #ff7a00;
+  color: white;
+}
+
+.secondary {
+  background: #eee;
+  color: #333;
+}
+
+/* ===============================
+   GRID
+================================ */
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+/* ===============================
+   COURT CARD
+================================ */
+.court-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: 0.25s ease;
+}
+
+.court-card:hover {
+  transform: translateY(-6px);
+}
+
+
+.court-card-image {
+  height: 150px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background: #eee;
+  
+}
+
+
+.court-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.court-card-image .placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  font-size: 14px;
+}
+
+
+.court-card-body {
+  padding: 14px;
+}
+
+.court-title {
+  margin: 0;
+  font-size: 18px;
+  color: #222;
+}
+
+.court-location {
+  font-size: 13px;
+  color: #777;
+  margin-top: 6px;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+.court-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.court-price {
+  font-weight: bold;
+  color: #1a8f3a;
+}
+
+/* ===============================
+   BUTTON INSIDE CARD
+================================ */
+.court-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ===============================
+   STATES
+================================ */
+.state-box {
+  text-align: center;
+  padding: 50px;
+  color: #777;
+}
+
+.error-box {
+  background: #ffe5e5;
+  color: #d60000;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+/* ===============================
+   SPINNER
+================================ */
+.spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid #ddd;
+  border-top: 3px solid #ff7a00;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+
+@media (max-width: 600px) {
+  .explore-filter-bar {
+    flex-direction: column;
+  }
+
+  .explore-actions {
+    width: 100%;
+  }
+
+  .btn {
+    flex: 1;
+  }
+}

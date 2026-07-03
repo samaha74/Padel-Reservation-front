@@ -1,0 +1,136 @@
+:root {
+  --orange: #e07b00;
+  --orange-dark: #b86200;
+  --orange-pale: #fff3e0;
+  --white: #ffffff;
+  --gray-200: #ddd9d2;
+  --gray-400: #999690;
+  --gray-600: #5a5752;
+  --gray-50: #f9f7f4;
+  --red-dark: #8c1f1f;
+  --red-light: #fee8e8;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.auth-wrapper {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--gray-50);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.auth-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.auth-logo span {
+  color: var(--orange);
+}
+
+.auth-sub {
+  text-align: center;
+  color: var(--gray-400);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.auth-group {
+  margin-bottom: 16px;
+}
+
+.auth-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.auth-input,
+.auth-select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  background: var(--white);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.auth-input:focus,
+.auth-select:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(224, 123, 0, 0.12);
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--orange);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.15s;
+}
+.auth-btn:hover {
+  background: var(--orange-dark);
+}
+.auth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--gray-600);
+}
+.auth-switch a {
+  color: var(--orange);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  background: var(--red-light);
+  color: var(--red-dark);
+}

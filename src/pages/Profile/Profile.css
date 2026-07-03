@@ -1,0 +1,293 @@
+/* ─── Profile Page Wrapper ─────────────────────────────────── */
+.profile-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+/* ─── Header Card ──────────────────────────────────────────── */
+.profile-header-card {
+  background: #ffffff;
+  border: 1px solid #F0EDE8;
+  border-radius: 16px;
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.profile-avatar-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #E07B00;
+  color: #ffffff;
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(224, 123, 0, 0.3);
+}
+
+.profile-display-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0F0F0F;
+  margin: 0 0 4px;
+}
+
+.profile-display-email {
+  font-size: 14px;
+  color: #5A5752;
+  margin: 0 0 10px;
+}
+
+.profile-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.meta-tag {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.meta-tag--orange { background: #FFF3E0; color: #B86200; }
+.meta-tag--gray   { background: #F0EDE8; color: #5A5752; }
+
+/* ─── Tabs ─────────────────────────────────────────────────── */
+.profile-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid #F0EDE8;
+  margin-bottom: 28px;
+}
+
+.profile-tab {
+  background: transparent;
+  border: none;
+  padding: 10px 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #5A5752;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.profile-tab:hover {
+  color: #0F0F0F;
+}
+
+.profile-tab--active {
+  color: #E07B00;
+  font-weight: 700;
+  border-bottom-color: #E07B00;
+}
+
+/* ─── Booking Stats Row ────────────────────────────────────── */
+.booking-stats-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.stat-pill {
+  background: #ffffff;
+  border: 1px solid #F0EDE8;
+  border-radius: 12px;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.stat-pill__num {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.stat-pill__label {
+  font-size: 11px;
+  color: #999690;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* ─── Filter Bar ───────────────────────────────────────────── */
+.booking-filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+  background: #F9F7F4;
+  border: 1px solid #F0EDE8;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #5A5752;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.filter-btn:hover {
+  border-color: #E07B00;
+  color: #E07B00;
+}
+
+.filter-btn--active {
+  background: #E07B00;
+  border-color: #E07B00;
+  color: #ffffff;
+}
+
+.filter-count {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.filter-btn:not(.filter-btn--active) .filter-count {
+  background: #F0EDE8;
+  color: #5A5752;
+}
+
+/* ─── Empty State ──────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state__icon {
+  font-size: 52px;
+  margin-bottom: 16px;
+}
+
+.empty-state h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0F0F0F;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: #5A5752;
+  margin-bottom: 20px;
+}
+
+.empty-cta {
+  display: inline-block;
+  background: #E07B00;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.empty-cta:hover {
+  background: #B86200;
+  color: #ffffff;
+}
+
+/* ─── Loading Center ───────────────────────────────────────── */
+.loading-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 0;
+  color: #5A5752;
+  font-size: 14px;
+}
+
+/* ─── Settings Card ────────────────────────────────────────── */
+.settings-card {
+  background: #ffffff;
+  border: 1px solid #F0EDE8;
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.settings-card__title {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #0F0F0F;
+  margin: 0 0 4px;
+}
+
+.settings-card__subtitle {
+  font-size: 13px;
+  color: #5A5752;
+  margin: 0;
+}
+
+/* ─── Responsive ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .profile-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .profile-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .profile-tabs::-webkit-scrollbar { display: none; }
+
+  .profile-tab {
+    white-space: nowrap;
+    padding: 10px 14px;
+  }
+
+  .booking-stats-row {
+    gap: 8px;
+  }
+
+  .stat-pill {
+    padding: 10px 14px;
+    min-width: 70px;
+  }
+
+  .settings-card {
+    padding: 20px 16px;
+  }
+
+  .profile-wrapper {
+    padding: 24px 16px 48px;
+  }
+}
