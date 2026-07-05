@@ -9,14 +9,6 @@ const initialValues = {
   imageFile: null,
 };
 
-const fileToDataUrl = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-
 export default function AddCourtForm({ onAdd, ownerId }) {
   const [courtData, setCourtData] = useState(initialValues);
   const [saving, setSaving] = useState(false);
@@ -43,16 +35,13 @@ export default function AddCourtForm({ onAdd, ownerId }) {
     setMessage(null);
 
     try {
-      const imageUrl = courtData.imageFile
-        ? await fileToDataUrl(courtData.imageFile)
-        : courtData.imageUrl;
-
       const payload = {
         name: courtData.name,
         location: courtData.location,
         pricePerHour: Number(courtData.pricePerHour),
         description: courtData.description,
-        imageUrl,
+        imageUrl: courtData.imageUrl,
+        imageFile: courtData.imageFile,
       };
 
       await onAdd(payload);

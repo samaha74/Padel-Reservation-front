@@ -4,28 +4,69 @@ import { API_BASE as API_BASE_URL } from "../../../config/api";
 const API_BASE = API_BASE_URL;
 
 // ─── Auth headers ─────────────────────────
-const getAuthHeaders = () => {
+const getAuthHeaders = (useJson = true) => {
   const userStr = localStorage.getItem("padel-user");
+  const headers = {};
 
-  if (!userStr) return { "Content-Type": "application/json" };
+  if (!userStr) {
+    return useJson ? { "Content-Type": "application/json" } : {};
+  }
 
   try {
     const user = JSON.parse(userStr);
     const token = user.token || user.data?.token; // Try both common paths
-    
+
     if (!token) {
       console.error("Token not found in user object");
-      return { "Content-Type": "application/json" };
+      return useJson ? { "Content-Type": "application/json" } : {};
     }
 
-    return {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    };
+    if (useJson) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    headers["Authorization"] = `Bearer ${token}`;
+    return headers;
   } catch (err) {
     console.error("Error parsing user from localStorage", err);
-    return { "Content-Type": "application/json" };
+    return useJson ? { "Content-Type": "application/json" } : {};
   }
+};
+
+const isFileUpload = (data) => {
+  if (!data?.imageFile) return false;
+
+  return (
+    (typeof File !== "undefined" && data.imageFile instanceof File) ||
+    (typeof Blob !== "undefined" && data.imageFile instanceof Blob)
+  );
+};
+
+const buildCourtPayload = (data) => {
+  if (!isFileUpload(data)) {
+    return data;
+  }
+
+  const formData = new FormData();
+  formData.append("name", data.name ?? "");
+  formData.append("location", data.location ?? "");
+  formData.append("pricePerHour", String(data.pricePerHour ?? ""));
+
+  if (data.description != null) {
+    formData.append("description", data.description);
+  }
+
+  if (data.imageUrl) {
+    formData.append("imageUrl", data.imageUrl);
+  }
+
+  if (data.imageFile) {
+    formData.append("image", data.imageFile);
+    formData.append("imageFile", data.imageFile);
+    formData.append("file", data.imageFile);
+  }
+
+  return formData;
 };
 
 
@@ -70,20 +111,26 @@ export async function getOwnerCourts() {
 }
 
 export async function createCourt(data) {
+  const payload = buildCourtPayload(data);
+  const useJson = !(payload instanceof FormData);
+
   const response = await axios.post(
     `${API_BASE}/owner/courts`,
-    data,
-    { headers: getAuthHeaders() }
+    payload,
+    { headers: getAuthHeaders(useJson) }
   );
 
   return response.data;
 }
 
 export async function updateCourt(id, data) {
+  const payload = buildCourtPayload(data);
+  const useJson = !(payload instanceof FormData);
+
   const response = await axios.put(
     `${API_BASE}/owner/courts/${id}`,
-    data,
-    { headers: getAuthHeaders() }
+    payload,
+    { headers: getAuthHeaders(useJson) }
   );
 
   return response.data;
