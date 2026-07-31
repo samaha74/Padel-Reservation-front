@@ -1,63 +1,359 @@
-.court-card {
-  background: #fff;
-  border-radius: 12px;
+/* ==========================================================================
+   UNIFIED COURT CARD STYLES
+   ========================================================================== */
+
+.pc-card {
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  border: 1px solid #e5e7eb;
-  cursor: pointer;
-  transition: 0.2s;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  position: relative;
+  height: 100%;
 }
 
-.court-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+.pc-card:not(.pc-card--owner) {
+  cursor: pointer;
 }
 
-.court-card-image {
-  height: 150px;
-  background: #111;
+.pc-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--orange-light);
+}
+
+/* ── BANNER / HEADER ── */
+.pc-banner {
+  height: 195px;
+  position: relative;
+  overflow: hidden;
+  background: var(--black);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.pc-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.pc-card:hover .pc-banner-img {
+  transform: scale(1.06);
+}
+
+.pc-banner-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, transparent 45%, rgba(0, 0, 0, 0.2) 100%);
+  pointer-events: none;
+}
+
+/* ── FALLBACK GRAPHIC ── */
+.pc-fallback-banner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.pc-court-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pc-fallback-overlay {
+  position: absolute;
+  inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  background: rgba(15, 15, 15, 0.45);
+  backdrop-filter: blur(2px);
+  color: var(--white);
+  gap: 4px;
 }
 
-.court-card-body {
-  padding: 14px;
+.pc-fallback-icon {
+  font-size: 28px;
+}
+
+.pc-fallback-name {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--white);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  max-width: 80%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── BADGES ── */
+.pc-badge {
+  position: absolute;
+  top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+.pc-badge-orange {
+  left: 12px;
+  background: rgba(224, 123, 0, 0.9);
+  color: var(--white);
+}
+
+.pc-badge-green {
+  left: 12px;
+  background: rgba(42, 96, 24, 0.9);
+  color: var(--white);
+}
+
+.pc-badge-blue {
+  left: 12px;
+  background: rgba(26, 61, 140, 0.9);
+  color: var(--white);
+}
+
+.pc-badge-active {
+  right: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--green-dark);
+}
+
+.pc-badge-inactive {
+  right: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--red-dark);
+}
+
+.pc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green-dark);
+  display: inline-block;
+}
+
+/* ── CARD BODY ── */
+.pc-body {
+  padding: 20px;
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 8px;
 }
 
-.court-title {
-  font-size: 16px;
-  font-weight: bold;
+.pc-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--black);
+  margin: 0;
+  line-height: 1.3;
 }
 
-.court-location {
-  font-size: 13px;
-  color: #666;
-}
-
-.court-card-footer {
+.pc-location {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--gray-600);
+  margin: 0;
+}
+
+.pc-loc-icon {
+  font-size: 14px;
+}
+
+.pc-description {
+  font-size: 13px;
+  color: var(--gray-600);
+  line-height: 1.4;
+  margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── STARS & RATING ── */
+.pc-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.pc-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.pc-star {
+  font-size: 14px;
+}
+
+.pc-star.filled {
+  color: var(--orange);
+}
+
+.pc-star.empty {
+  color: var(--gray-200);
+}
+
+.pc-rating-num {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-800);
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+.pc-rating-new {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-400);
+  background: var(--gray-100);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.pc-divider {
   margin-top: auto;
-  padding-top: 10px;
-  border-top: 1px solid #eee;
+  padding-top: 12px;
+  border-top: 1px solid var(--gray-100);
 }
 
-.court-price {
-  font-weight: bold;
-  color: #f97316;
+/* ── PLAYER FOOTER ── */
+.pc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.court-btn {
-  background: #f97316;
-  color: white;
+.pc-price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.pc-price-amount {
+  font-family: 'DM Sans', sans-serif !important;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--orange-dark);
+}
+
+.pc-price-unit {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+.pc-btn {
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
   border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
   cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.pc-btn-primary {
+  background: var(--orange);
+  color: var(--white);
+}
+
+.pc-btn-primary:hover {
+  background: var(--orange-dark);
+  transform: translateY(-1px);
+}
+
+/* ── OWNER CONTROLS ── */
+.pc-owner-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.pc-owner-price {
+  font-size: 13px;
+  color: var(--gray-800);
+}
+
+.pc-owner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.pc-owner-btn {
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-800);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.pc-owner-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.pc-owner-btn--edit:hover {
+  border-color: var(--orange);
+  color: var(--orange-dark);
+  background: var(--orange-pale);
+}
+
+.pc-owner-btn--delete:hover {
+  border-color: var(--red-dark);
+  color: var(--red-dark);
+  background: var(--red-light);
+}
+
+.pc-owner-btn--bookings:hover {
+  border-color: var(--blue-dark);
+  color: var(--blue-dark);
+  background: var(--blue-light);
+}
+
+.pc-owner-btn--reviews:hover {
+  border-color: var(--green-dark);
+  color: var(--green-dark);
+  background: var(--green-light);
 }

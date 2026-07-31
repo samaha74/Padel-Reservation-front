@@ -4,6 +4,7 @@ const initialValues = {
   name: "",
   location: "",
   pricePerHour: "",
+  surface: "Padel",
   description: "",
   imageUrl: "",
   imageFile: null,
@@ -11,6 +12,7 @@ const initialValues = {
 
 export default function AddCourtForm({ onAdd, ownerId }) {
   const [courtData, setCourtData] = useState(initialValues);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
@@ -22,12 +24,17 @@ export default function AddCourtForm({ onAdd, ownerId }) {
   const handleImageChange = (event) => {
     const file = event.target.files?.[0] || null;
     setCourtData((prev) => ({ ...prev, imageFile: file }));
+    if (file) {
+      setPreviewUrl(URL.createObjectURL(file));
+    } else {
+      setPreviewUrl(null);
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!courtData.name || !courtData.location || !courtData.pricePerHour) {
-      setMessage("Name, location, and price are required.");
+      setMessage({ type: "danger", text: "Name, location, and price per hour are required." });
       return;
     }
 
@@ -39,6 +46,7 @@ export default function AddCourtForm({ onAdd, ownerId }) {
         name: courtData.name,
         location: courtData.location,
         pricePerHour: Number(courtData.pricePerHour),
+        surface: courtData.surface,
         description: courtData.description,
         imageUrl: courtData.imageUrl,
         imageFile: courtData.imageFile,
@@ -46,88 +54,114 @@ export default function AddCourtForm({ onAdd, ownerId }) {
 
       await onAdd(payload);
       setCourtData(initialValues);
-      setMessage("Court added successfully.");
+      setPreviewUrl(null);
+      setMessage({ type: "success", text: "Court created successfully! Returning to dashboard..." });
     } catch (error) {
       console.error("Add court failed", error);
-      setMessage(
-        error?.response?.data?.message || error?.message || "Failed to add court."
-      );
+      setMessage({
+        type: "danger",
+        text: error?.response?.data?.message || error?.message || "Failed to add court.",
+      });
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="card mb-4">
-      <div className="card-body">
-        <h5 className="card-title">Add New Court</h5>
-        {message && <div className="alert alert-info">{message}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Court Name</label>
-            <input
-              type="text"
-              name="name"
-              value={courtData.name}
-              onChange={handleChange}
-              className="form-control"
-              placeholder="E.g. Downtown Padel Club"
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Location</label>
-            <input
-              type="text"
-              name="location"
-              value={courtData.location}
-              onChange={handleChange}
-              className="form-control"
-              placeholder="City, neighborhood, or address"
-            />
-          </div>
-          <div className="mb-3 row">
-            <div className="col-md-6">
-              <label className="form-label">Price per hour</label>
-              <input
-                type="number"
-                min="0"
-                name="pricePerHour"
-                value={courtData.pricePerHour}
-                onChange={handleChange}
-                className="form-control"
-                placeholder="25"
-              />
-            </div>
-            
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Description</label>
-            <textarea
-              name="description"
-              value={courtData.description}
-              onChange={handleChange}
-              className="form-control"
-              rows="3"
-              placeholder="Optional court details"
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Main Court Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="form-control"
-            />
-            {courtData.imageFile && (
-              <small className="text-muted">Selected file: {courtData.imageFile.name}</small>
-            )}
-          </div>
-          <button type="submit" className="btn btn-primary" disabled={saving}>
-            {saving ? "Saving..." : "Add Court"}
-          </button>
-        </form>
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      {message && (
+        <div
+          className={`tag ${message.type === "success" ? "tag-green" : "tag-red"}`}
+          style={{ padding: "12px 16px", borderRadius: "var(--radius-md)", fontSize: "14px", width: "100%" }}
+        >
+          {message.type === "success" ? "✅" : "⚠️"} {message.text}
+        </div>
+      )}
+
+      <div className="form-group">
+        <label className="form-label">Court Name *</label>
+        <input
+          type="text"
+          name="name"
+          value={courtData.name}
+          onChange={handleChange}
+          placeholder="e.g. Downtown Padel Arena"
+          required
+        />
       </div>
-    </div>
+
+      <div className="form-group">
+        <label className="form-label">Location *</label>
+        <input
+          type="text"
+          name="location"
+          value={courtData.location}
+          onChange={handleChange}
+          placeholder="e.g. 15 Road 9, Maadi, Cairo"
+          required
+        />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+        <div className="form-group">
+          <label className="form-label">Price Per Hour (EGP) *</label>
+          <input
+            type="number"
+            min="0"
+            name="pricePerHour"
+            value={courtData.pricePerHour}
+            onChange={handleChange}
+            placeholder="e.g. 350"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Court Surface Type</label>
+          <select name="surface" value={courtData.surface} onChange={handleChange}>
+            <option value="Padel">Standard Padel</option>
+            <option value="Grass">Grass Court</option>
+            <option value="Indoor">Indoor Court</option>
+            <option value="Panoramica">Panoramic Glass</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Court Description</label>
+        <textarea
+          name="description"
+          value={courtData.description}
+          onChange={handleChange}
+          rows="3"
+          placeholder="Provide details such as lighting, equipment rental, locker rooms, or parking..."
+        />
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Court Image URL (Optional)</label>
+        <input
+          type="text"
+          name="imageUrl"
+          value={courtData.imageUrl}
+          onChange={handleChange}
+          placeholder="https://example.com/court-photo.jpg"
+        />
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Or Upload Main Court Image</label>
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+        {previewUrl && (
+          <div style={{ marginTop: "12px", borderRadius: "var(--radius-md)", overflow: "hidden", height: "160px" }}>
+            <img src={previewUrl} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
+        )}
+      </div>
+
+      <button type="submit" className="btn btn-primary" style={{ marginTop: "8px", padding: "14px" }} disabled={saving}>
+        {saving ? "Saving Court..." : "+ Create Court"}
+      </button>
+    </form>
   );
 }

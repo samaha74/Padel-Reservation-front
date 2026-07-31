@@ -54,6 +54,7 @@ const Signup = () => {
                 name="firstName"
                 value={form.firstName}
                 onChange={handleChange}
+                placeholder="e.g. John"
                 required
               />
             </div>
@@ -65,6 +66,7 @@ const Signup = () => {
                 name="lastName"
                 value={form.lastName}
                 onChange={handleChange}
+                placeholder="e.g. Doe"
                 required
               />
             </div>

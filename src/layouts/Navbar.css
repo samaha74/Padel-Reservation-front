@@ -81,8 +81,8 @@
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
-  padding: 6px 14px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
   transition:
     background 0.15s,
     color 0.15s;
@@ -113,8 +113,8 @@
   color: rgba(255, 255, 255, 0.88);
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
   transition:
     background 0.15s,
     color 0.15s;
@@ -220,6 +220,7 @@
     opacity: 0;
     transform: translateY(-6px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -333,10 +334,12 @@
 .pnav__burger--open span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
 }
+
 .pnav__burger--open span:nth-child(2) {
   opacity: 0;
   transform: scaleX(0);
 }
+
 .pnav__burger--open span:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
 }
@@ -444,6 +447,7 @@
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
+
   .pnav__links,
   .pnav__right {
     display: none;

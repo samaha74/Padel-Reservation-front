@@ -14,7 +14,7 @@ const getAuthHeaders = (useJson = true) => {
 
   try {
     const user = JSON.parse(userStr);
-    const token = user.token || user.data?.token; // Try both common paths
+    const token = user.token || user.data?.token;
 
     if (!token) {
       console.error("Token not found in user object");

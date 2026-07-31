@@ -4,6 +4,8 @@ import CourtCard from "../../features/courts/components/CourtCard";
 import CourtReviewsModal from "../../features/courts/components/CourtReviewsModal";
 import useCourts from "../../features/courts/hooks/useCourts";
 import { bookingService } from "../../features/bookings/api/bookingService";
+import "./OwnerDashboard.css";
+
 function getBookingCourtId(booking) {
   if (!booking) return null;
   const { court } = booking;
@@ -23,30 +25,28 @@ function bookingBelongsToCourt(booking, courtId) {
   return cid != null && String(cid) === id;
 }
 
-/** Hide bookings for deleted courts (stale API rows) and bare "Unknown Court" orphans. */
 function isReservationVisibleForOwnerCourts(booking, ownerCourts) {
   const validIds = new Set(ownerCourts.map((c) => String(c.id ?? c._id)));
   const cid = getBookingCourtId(booking);
   if (cid != null) {
     return validIds.has(String(cid));
   }
-  const hasCourtLabel = Boolean(booking.court?.name) || Boolean(booking.courtName);
-  return hasCourtLabel;
+  return Boolean(booking.court?.name) || Boolean(booking.courtName);
 }
 
 function getOwnerReservationBadge(booking) {
   if (booking.status === "Cancelled") {
-    return { label: "Cancelled", badgeClass: "bg-danger" };
+    return { label: "Cancelled", badgeClass: "od-badge od-badge-danger" };
   }
   if (booking.status === "Completed") {
-    return { label: "Completed", badgeClass: "bg-success" };
+    return { label: "Completed", badgeClass: "od-badge od-badge-success" };
   }
   const end = booking.endTime != null ? new Date(booking.endTime) : null;
   const ended = end != null && !Number.isNaN(end.getTime()) && end.getTime() < Date.now();
   if (ended) {
-    return { label: "Done", badgeClass: "bg-success" };
+    return { label: "Completed", badgeClass: "od-badge od-badge-success" };
   }
-  return { label: booking.status || "Upcoming", badgeClass: "bg-warning text-dark" };
+  return { label: booking.status || "Upcoming", badgeClass: "od-badge od-badge-warning" };
 }
 
 export default function OwnerDashboard() {
@@ -56,6 +56,7 @@ export default function OwnerDashboard() {
   const [reservationsLoading, setReservationsLoading] = useState(false);
   const [reservationsError, setReservationsError] = useState(null);
   const [selectedCourtId, setSelectedCourtId] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("ALL"); // ALL, UPCOMING, COMPLETED, CANCELLED
   const [reviewCourtId, setReviewCourtId] = useState(null);
   const [reviewCourtName, setReviewCourtName] = useState("");
 
@@ -69,23 +70,23 @@ export default function OwnerDashboard() {
   };
 
   const handleDelete = async (courtId) => {
-    if (!window.confirm("Delete this court?")) {
+    if (!window.confirm("Are you sure you want to delete this court?")) {
       return;
     }
 
     await deleteCourt(courtId);
     setReservations((prev) => prev.filter((b) => !bookingBelongsToCourt(b, courtId)));
     setSelectedCourtId((selected) =>
-      selected != null && String(selected) === String(courtId) ? null : selected,
+      selected != null && String(selected) === String(courtId) ? null : selected
     );
   };
 
   const handleShowBookings = (courtId) => {
-    setSelectedCourtId(courtId);
+    setSelectedCourtId((prev) => (prev === courtId ? null : courtId));
   };
 
   const handleShowReviews = (courtId) => {
-    const court = courts.find(c => (c.id || c._id) === courtId);
+    const court = courts.find((c) => (c.id || c._id) === courtId);
     setReviewCourtId(courtId);
     setReviewCourtName(court?.name || "Court");
   };
@@ -104,7 +105,9 @@ export default function OwnerDashboard() {
       setReservations(Array.isArray(data) ? data : data?.bookings || data?.data || []);
     } catch (error) {
       setReservations([]);
-      setReservationsError(error?.response?.data?.message || error.message || "Unable to load reservations.");
+      setReservationsError(
+        error?.response?.data?.message || error.message || "Unable to load reservations."
+      );
     } finally {
       setReservationsLoading(false);
     }
@@ -122,93 +125,229 @@ export default function OwnerDashboard() {
     if (selectedCourtId) {
       list = list.filter((b) => bookingBelongsToCourt(b, selectedCourtId));
     }
+    if (statusFilter !== "ALL") {
+      list = list.filter((b) => {
+        const badge = getOwnerReservationBadge(b);
+        return badge.label.toUpperCase() === statusFilter;
+      });
+    }
     return list;
-  }, [reservations, courts, loading, selectedCourtId]);
+  }, [reservations, courts, loading, selectedCourtId, statusFilter]);
+
+  // Total Revenue Calculation
+  const totalRevenue = useMemo(() => {
+    return visibleReservations.reduce((acc, b) => {
+      if (b.status !== "Cancelled") {
+        return acc + (Number(b.totalPrice) || Number(b.price) || 0);
+      }
+      return acc;
+    }, 0);
+  }, [visibleReservations]);
+
+  const selectedCourt = courts.find((c) => (c.id || c._id) === selectedCourtId);
 
   return (
-    <div className="container py-5">
-      <div className="mb-4">
-        <h2>Owner Dashboard</h2>
-        <p className="text-muted">Manage your courts and reservations from one place.</p>
+    <div className="od-page">
+      {/* Header Banner */}
+      <div className="od-header">
+        <div>
+          <h1 className="od-header-title">Owner Management Dashboard</h1>
+          <p className="od-header-sub">
+            Monitor court status, view customer reservations, and track business growth.
+          </p>
+        </div>
+        <button type="button" className="od-add-btn" onClick={handleAddClick}>
+          <span>+</span> Add New Court
+        </button>
       </div>
 
-      <div className="row gx-4">
-        <div className="col-lg-4">
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <h5 className="mb-0">Your Courts</h5>
-              <p className="text-muted small mb-0">Add or manage courts here.</p>
-            </div>
-            <button type="button" className="btn btn-warning text-white" onClick={handleAddClick}>
-              Add Court
-            </button>
+      {/* Metrics Strip */}
+      <div className="od-metrics">
+        <div className="od-metric-card accent">
+          <div className="od-metric-icon">🏟️</div>
+          <div className="od-metric-info">
+            <span className="od-metric-label">Managed Courts</span>
+            <span className="od-metric-val">{courts.length}</span>
           </div>
-
-          {loading && <div className="alert alert-info">Loading your courts...</div>}
-          {error && <div className="alert alert-danger">{error}</div>}
-
-          {!loading && courts.length === 0 && (
-            <div className="alert alert-secondary">No courts found. Click Add Court to create your first court.</div>
-          )}
-
-          {courts.map((court) => (
-            <CourtCard
-              key={court.id || court._id}
-              court={court}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onShowBookings={handleShowBookings}
-              onShowReviews={handleShowReviews}
-            />
-          ))}
         </div>
 
-        <div className="col-lg-8">
-          <div className="card shadow-sm mb-4">
-            <div className="card-body">
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <h5 className="card-title mb-0">
-                    {selectedCourtId ? "Court Reservations" : "All Reservations"}
-                  </h5>
-                  <p className="text-muted mb-0">
-                    {selectedCourtId ? "Reservations for the selected court." : "All current reservations for your courts."}
-                  </p>
-                </div>
-                {selectedCourtId && (
-                  <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => setSelectedCourtId(null)}>
-                    Show All
-                  </button>
-                )}
-              </div>
+        <div className="od-metric-card">
+          <div className="od-metric-icon">📅</div>
+          <div className="od-metric-info">
+            <span className="od-metric-label">Reservations</span>
+            <span className="od-metric-val">{visibleReservations.length}</span>
+          </div>
+        </div>
+
+        <div className="od-metric-card">
+          <div className="od-metric-icon">💰</div>
+          <div className="od-metric-info">
+            <span className="od-metric-label">Total Revenue</span>
+            <span className="od-metric-val">{totalRevenue.toLocaleString()} EGP</span>
+          </div>
+        </div>
+
+        <div className="od-metric-card">
+          <div className="od-metric-icon">⭐</div>
+          <div className="od-metric-info">
+            <span className="od-metric-label">Court Health</span>
+            <span className="od-metric-val">100% Active</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Grid */}
+      <div className="od-grid">
+        {/* Courts Section */}
+        <div className="od-panel">
+          <div className="od-panel-header">
+            <div>
+              <h2 className="od-panel-title">Your Courts ({courts.length})</h2>
+              <p className="od-panel-sub">Click on any court to filter its reservations</p>
+            </div>
+            {selectedCourtId && (
+              <button
+                type="button"
+                className="od-res-filter-btn active"
+                onClick={() => setSelectedCourtId(null)}
+              >
+                Clear Filter (Showing {selectedCourt?.name})
+              </button>
+            )}
+          </div>
+
+          {loading && (
+            <div className="od-empty">
+              <div className="od-empty-icon">⏳</div>
+              <div className="od-empty-title">Loading courts...</div>
+            </div>
+          )}
+
+          {error && (
+            <div className="od-empty" style={{ borderColor: "var(--red-dark)" }}>
+              <div className="od-empty-icon">⚠️</div>
+              <div className="od-empty-title" style={{ color: "var(--red-dark)" }}>{error}</div>
+            </div>
+          )}
+
+          {!loading && courts.length === 0 && (
+            <div className="od-empty">
+              <div className="od-empty-icon">🎾</div>
+              <div className="od-empty-title">No Courts Created Yet</div>
+              <p className="od-empty-sub">Add your first court to start accepting online bookings.</p>
+              <button type="button" className="od-add-btn" style={{ marginTop: "16px" }} onClick={handleAddClick}>
+                + Add First Court
+              </button>
+            </div>
+          )}
+
+          <div className="od-courts-list">
+            {courts.map((court) => (
+              <CourtCard
+                key={court.id || court._id}
+                court={court}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onShowBookings={handleShowBookings}
+                onShowReviews={handleShowReviews}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Reservations Section */}
+        <div className="od-panel">
+          <div className="od-panel-header">
+            <div>
+              <h2 className="od-panel-title">
+                {selectedCourtId ? `Reservations: ${selectedCourt?.name}` : "All Reservations"}
+              </h2>
+              <p className="od-panel-sub">Customer bookings and payment statuses</p>
             </div>
           </div>
 
-          {reservationsLoading && <div className="alert alert-info">Loading reservations...</div>}
-          {reservationsError && <div className="alert alert-danger">{reservationsError}</div>}
+          {/* Status Filter Tabs */}
+          <div className="od-res-filters">
+            {["ALL", "UPCOMING", "COMPLETED", "CANCELLED"].map((status) => (
+              <button
+                key={status}
+                type="button"
+                className={`od-res-filter-btn ${statusFilter === status ? "active" : ""}`}
+                onClick={() => setStatusFilter(status)}
+              >
+                {status === "ALL" ? "All Statuses" : status}
+              </button>
+            ))}
+          </div>
+
+          {reservationsLoading && (
+            <div className="od-empty">
+              <div className="od-empty-icon">⏳</div>
+              <div className="od-empty-title">Loading reservations...</div>
+            </div>
+          )}
+
+          {reservationsError && (
+            <div className="od-empty">
+              <div className="od-empty-icon">⚠️</div>
+              <div className="od-empty-title">{reservationsError}</div>
+            </div>
+          )}
+
           {!reservationsLoading && visibleReservations.length === 0 && (
-            <div className="alert alert-secondary">No reservations found yet.</div>
+            <div className="od-empty">
+              <div className="od-empty-icon">📋</div>
+              <div className="od-empty-title">No Reservations Found</div>
+              <p className="od-empty-sub">
+                {selectedCourtId
+                  ? "No bookings recorded for this court yet."
+                  : "No reservations match the selected filter."}
+              </p>
+            </div>
           )}
 
           {visibleReservations.map((booking) => {
             const badge = getOwnerReservationBadge(booking);
+            const startDate = booking.startTime ? new Date(booking.startTime) : null;
+            const endDate = booking.endTime ? new Date(booking.endTime) : null;
+            const userName = booking.user?.name || booking.user?.email || booking.customerName || "Player";
+
             return (
-              <div key={booking.id || booking._id} className="card mb-3 shadow-sm">
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-start mb-2">
-                    <div>
-                      <h6 className="mb-1">{booking.court?.name || booking.courtName || "Unknown Court"}</h6>
-                      <p className="mb-1 text-muted">Booked by {booking.user?.name || booking.user?.email || booking.customerName || "Guest"}</p>
+              <div key={booking.id || booking._id} className="od-res-card">
+                <div className="od-res-top">
+                  <div>
+                    <h4 className="od-res-court-name">
+                      {booking.court?.name || booking.courtName || "Padel Court"}
+                    </h4>
+                    <div className="od-res-user">
+                      👤 Booked by <strong>{userName}</strong>
                     </div>
-                    <span className={`badge ${badge.badgeClass}`}>{badge.label}</span>
                   </div>
-                  <p className="mb-1">
-                    <strong>Date:</strong> {booking.startTime ? new Date(booking.startTime).toLocaleDateString() : "-"}
-                  </p>
-                  <p className="mb-0">
-                    <strong>Time:</strong>{" "}
-                    {booking.startTime ? new Date(booking.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "-"} - {booking.endTime ? new Date(booking.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "-"}
-                  </p>
+                  <span className={badge.badgeClass}>{badge.label}</span>
+                </div>
+
+                <div className="od-res-details">
+                  <div className="od-res-detail-item">
+                    <span>📅</span>
+                    <span>{startDate ? startDate.toLocaleDateString("en-EG", { weekday: "short", day: "numeric", month: "short", year: "numeric" }) : "-"}</span>
+                  </div>
+
+                  <div className="od-res-detail-item">
+                    <span>🕒</span>
+                    <span>
+                      {startDate ? startDate.toLocaleTimeString("en-EG", { hour: "2-digit", minute: "2-digit", hour12: false }) : "-"} - {endDate ? endDate.toLocaleTimeString("en-EG", { hour: "2-digit", minute: "2-digit", hour12: false }) : "-"}
+                    </span>
+                  </div>
+
+                  <div className="od-res-detail-item">
+                    <span>💰</span>
+                    <span>Price: <strong>{booking.totalPrice || booking.price || 0} EGP</strong></span>
+                  </div>
+
+                  <div className="od-res-detail-item">
+                    <span>📍</span>
+                    <span>{booking.court?.location || "Cairo, Egypt"}</span>
+                  </div>
                 </div>
               </div>
             );
@@ -216,9 +355,10 @@ export default function OwnerDashboard() {
         </div>
       </div>
 
+      {/* Reviews Modal */}
       {reviewCourtId && (
-        <CourtReviewsModal 
-          courtId={reviewCourtId} 
+        <CourtReviewsModal
+          courtId={reviewCourtId}
           courtName={reviewCourtName}
           onClose={handleCloseReviews}
         />

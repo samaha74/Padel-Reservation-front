@@ -12,13 +12,13 @@
   --orange-pale: #ffedd5;
   --text: #1a1a1a;
   --text-muted: #6b7280;
-  --border: #e5e7eb;
+  --border: rgba(0, 0, 0, 0.08);
   --white: #ffffff;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.14);
-  --radius: 16px;
-  --radius-sm: 8px;
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --radius: 26px;
+  --radius-sm: 16px;
 }
 
 /* ===== LOADER ===== */
@@ -482,9 +482,9 @@
 }
 .cd-input {
   width: 100%;
-  padding: 11px 14px;
+  padding: 12px 18px;
   border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   font-size: 0.95rem;
   font-family: "DM Sans", sans-serif;
   color: var(--text);
@@ -506,11 +506,11 @@
   gap: 8px;
 }
 .cd-time-btn {
-  padding: 9px 4px;
+  padding: 10px 6px;
   border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 12px !important;
   background: var(--white);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--text);
   cursor: pointer;
@@ -538,8 +538,8 @@
   gap: 8px;
 }
 .time-slot {
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border-radius: 12px !important;
   border: 1.5px solid var(--border);
   background: var(--white);
   font-weight: 700;
@@ -609,11 +609,11 @@
 
 .cd-book-btn {
   width: 100%;
-  padding: 15px;
+  padding: 16px;
   background: var(--orange);
   color: white;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   font-size: 1rem;
   font-weight: 700;
   font-family: "DM Sans", sans-serif;

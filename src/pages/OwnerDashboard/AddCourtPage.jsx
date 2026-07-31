@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AddCourtForm from "../../features/courts/components/AddCourtForm";
 import { useAuth } from "../../context/AuthContext";
 import useCourts from "../../features/courts/hooks/useCourts";
+import "./OwnerDashboard.css";
 
 export default function AddCourtPage() {
   const { user } = useAuth();
@@ -11,7 +12,9 @@ export default function AddCourtPage() {
 
   const handleAdd = async (courtData) => {
     await addCourt(courtData);
-    navigate("/owner");
+    setTimeout(() => {
+      navigate("/owner");
+    }, 400);
   };
 
   const handleCancel = () => {
@@ -19,18 +22,37 @@ export default function AddCourtPage() {
   };
 
   return (
-    <div className="container py-5">
-      <div className="row justify-content-center">
-        <div className="col-lg-6">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h2 className="card-title text-center mb-4">Add New Court</h2>
-              <AddCourtForm onAdd={handleAdd} ownerId={user?.id} />
-              <div className="text-center mt-3">
-                <button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </div>
+    <div className="od-page">
+      <div style={{ maxWidth: "680px", margin: "0 auto" }}>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm"
+          style={{ marginBottom: "20px" }}
+          onClick={handleCancel}
+        >
+          ← Back to Owner Dashboard
+        </button>
+
+        <div className="card shadow-sm">
+          <div className="card-body">
+            <h2 className="od-panel-title" style={{ fontSize: "22px", marginBottom: "6px" }}>
+              Add New Padel Court
+            </h2>
+            <p className="od-panel-sub" style={{ marginBottom: "24px" }}>
+              Fill in the court details to list it for online player bookings.
+            </p>
+
+            <AddCourtForm onAdd={handleAdd} ownerId={user?.id} />
+
+            <div style={{ textAlign: "center", marginTop: "16px" }}>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={handleCancel}
+                style={{ width: "100%" }}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
